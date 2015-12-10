@@ -15,17 +15,18 @@ function create() {
 	game.add.sprite(0, 0, 'sky');
 	console.log("background loads");
 	//Loads pokeball image and creates a button on it.
-	startButton = game.add.button(0, 100, 'pokeBall');
+	startButton = game.add.button(0, 100, 'pokeBall', whenClicked, this);
 	console.log("button loads");
-	
 
 	var text = " STRIFE ";
     var style = { font: "65px Rockwell", fill: "#007acc", align: "center" };
 
     var t = game.add.text(game.world.centerX-300, game.world.centerY-300, text, style);
 
+}
 
-
+function whenClicked() {
+	console.log("Working ^^")
 }
 
 function update() {
