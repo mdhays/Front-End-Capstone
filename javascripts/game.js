@@ -4,6 +4,7 @@ function preload() {
 	// Preloading the images.
 	game.load.image('sky', './images/Hoenn.png');
 	game.load.image('pokeBall', './images/pokeball.png');
+	game.load.image('platform', './images/platform.png');
 }
 // Global variables for menus.
 var startButton;
@@ -93,6 +94,33 @@ function create() {
 
 				t.destroy();
 				hoenn.destroy();
+
+				//  We're going to be using physics, so enable the Arcade Physics system.
+			    game.physics.startSystem(Phaser.Physics.ARCADE);
+
+			     //  The platforms group contains the ground and the 2 ledges we can jump on
+			    platforms = game.add.group();
+
+			    //  We will enable physics for any object that is created in this group
+			    platforms.enableBody = true;
+
+			     // Here we create the ground.
+			    var ground = platforms.create(300, game.world.height - 64, 'platform');
+
+			    //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
+			    ground.scale.setTo(2, 2);
+
+			    //  This stops it from falling away when you jump on it
+			    ground.body.immovable = true;
+
+			     //  Now let's create two ledges
+			    var ledge = platforms.create(-100, 550, 'platform');
+
+			    ledge.body.immovable = true;
+
+			    ledge = platforms.create(1100, 550, 'platform');
+
+			    ledge.body.immovable = true;
 			}
 		}
 
