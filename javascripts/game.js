@@ -1,11 +1,11 @@
 var game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 
 function preload() {
-	// Getting the Hoenn background.
+	// Preloading the images.
 	game.load.image('sky', './images/Hoenn.png');
 	game.load.image('pokeBall', './images/pokeball.png');
 }
-// Global variables
+// Global variables for menus.
 var startButton;
 var text;
 
@@ -23,12 +23,15 @@ function create() {
     var style = { font: "65px Rockwell", fill: "#007acc", align: "center" };
     // Creates the text, positions it, and adds it to the game world.
     var t = game.add.text(game.world.centerX-300, game.world.centerY-300, text, style);
-    // When startButton is clicked, the 
+    
+
+    // When startButton is clicked, this function executes.
 	function whenClicked() {
 		console.log("Click working ^^");
 		startButton.destroy();
-		console.log(text);
 		t.destroy();
+		text = " Choose Your Character ";
+		t = game.add.text(game.world.centerX-300, game.world.centerY-300, text, style);
 	// End of whenClicked
 	}
 // End of create
