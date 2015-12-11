@@ -9,6 +9,10 @@ function preload() {
 var startButton;
 var text;
 
+// Character names
+
+var rainbowDash;
+var fluttershy;
 
 
 function create() {
@@ -25,7 +29,9 @@ function create() {
     // Creates the text, positions it, and adds it to the game world.
     var t = game.add.text(game.world.centerX-300, game.world.centerY-300, text, style);
 
+    // Character initials for storing their name's text in.
     var RD;
+    var FS;
     
     // When startButton is clicked, this function executes.
 	function whenClicked() {
@@ -37,17 +43,31 @@ function create() {
 		// and new text and buttons, are created.
 		text = " Choose Your Character ";
 		t = game.add.text(game.world.centerX-300, game.world.centerY-300, text, style);
-		RD = " Rainbow Dash ";
 		
 
-		rainbowDash = game.add.text(game.world.centerX-300, game.world.centerY-100, RD, style);
+
+		// This section handles creating character name text and allow it to be turned into an
+		// input
+		RD = " Rainbow Dash ";
+		rainbowDash = game.add.text(game.world.centerX-700, game.world.centerY-100, RD, style);
 		rainbowDash.events.onInputDown.add(selected, this);
 		rainbowDash.inputEnabled = true;
 		
+
+		FS = " Fluttershy ";
+		fluttershy = game.add.text(game.world.centerX+300, game.world.centerY-100, FS, style);
+		fluttershy.events.onInputDown.add(selected, this);
+		fluttershy.inputEnabled = true;
+
+		// This function runs when a character name is clicked on.
+		// It handles removing the screens elements on this page and adding ones for the level
+		// select page.
 		function selected() {
 			
-			rainbowDash.destroy();
 			t.destroy();
+			rainbowDash.destroy();
+			fluttershy.destroy();
+
 		}
 
 
