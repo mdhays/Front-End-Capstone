@@ -9,11 +9,14 @@ function preload() {
 var startButton;
 var text;
 
-// Character names
+// Character names.
 
 var rainbowDash;
 var fluttershy;
 
+// Level names.
+
+var hoenn;
 
 function create() {
 	
@@ -30,11 +33,17 @@ function create() {
     var t = game.add.text(game.world.centerX-300, game.world.centerY-300, text, style);
 
     // Character initials for storing their name's text in.
+    
     var RD;
     var FS;
+
+    // Level initials for storing their name's text in.
+
+    var HN;
     
     // When startButton is clicked, this function executes.
 	function whenClicked() {
+		
 		// Button and text are removed...
 		console.log("Click working ^^");
 		startButton.destroy();
@@ -59,15 +68,32 @@ function create() {
 		fluttershy.events.onInputDown.add(selected, this);
 		fluttershy.inputEnabled = true;
 
-		// This function runs when a character name is clicked on.
+		// This function runs when a character's name is clicked on.
 		// It handles removing the screens elements on this page and adding ones for the level
 		// select page.
 		function selected() {
 			
+			// Text is removed and updated.
 			t.destroy();
 			rainbowDash.destroy();
 			fluttershy.destroy();
 
+			text = " Select A Stage ";
+			t = game.add.text(game.world.centerX-300, game.world.centerY-300, text, style);
+
+			HN = " Hoenn ";
+		hoenn = game.add.text(game.world.centerX-220, game.world.centerY-100, HN, style);
+		hoenn.events.onInputDown.add(levelSelected, this);
+		hoenn.inputEnabled = true;
+
+			// This function runs when a level's name has been clicked on.
+			// It handles removing the screen's elements and will eventually move to the
+			// level view.
+			function levelSelected() {
+
+				t.destroy();
+				hoenn.destroy();
+			}
 		}
 
 
