@@ -57,7 +57,9 @@ function create() {
     ledge.body.immovable = true;
 
     // The player and its settings
-    player = game.add.sprite(32, game.world.height - 150, 'RainbowDash');
+    player = game.add.sprite(32, game.world.height - 200, 'RainbowDash');
+
+        player.scale.setTo(2);
 
     //  We need to enable physics on the player
     game.physics.enable(player, Phaser.Physics.ARCADE);
@@ -106,7 +108,7 @@ function update() {
     {
         if (facing != 'idle')
         {
-            player.animations.stop();
+            // player.animations.stop();
 
             if (facing == 'left')
             {
@@ -114,7 +116,7 @@ function update() {
             }
             else
             {
-                player.frame = 5;
+                player.frame = [0, 1, 2, 3, 4];
             }
 
             facing = 'idle';
