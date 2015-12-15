@@ -6,6 +6,9 @@ var startButton;
 var text;
 var platforms;
 var player;
+var cursors;
+var jumpButton;
+var facing;
 var rainbowDash;
 var fluttershy;
 var hoenn;
@@ -17,13 +20,16 @@ function preload() {
 	game.load.image('pokeBall', './images/pokeball.png');
 	game.load.image('platform', './images/platform.png');
 
-	game.load.spritesheet('RainbowDash', './sprites/rainbowdash.png', 55, 75, 39);
+	game.load.spritesheet('RainbowDash', './sprites/dash.png', 43, 60, 39);
 
 }
 
 
 function create() {
 	
+	// Assigning Fps
+	game.time.desiredFps = 60;
+
 	// Loading the Hoenn background.
 	game.add.sprite(0, 0, 'sky');
 	console.log("background loads");
@@ -56,10 +62,17 @@ function create() {
     //  We need to enable physics on the player
     game.physics.enable(player, Phaser.Physics.ARCADE);
 
-    
+    // Giving the sprite physics attributes.
     player.body.bounce.y = 0.2;
     player.body.gravity.y = 300;
     player.body.collideWorldBounds = true;
+
+    cursors = game.input.keyboard.createCursorKeys();
+    jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
+    player.animations.add('left', [, 23, 22, 21], 10, true);
+    player.animations.add('turn', [4], 20, true);
+    player.animations.add('right', [1, 2, 3, 4], 10, true);
 }
 
     
@@ -67,5 +80,54 @@ function update() {
 
 	game.physics.arcade.collide(player, platforms);
 
+	 player.body.velocity.x = 0;
+
+    if (cursors.left.isDown)
+    {
+        player.body.velocity.x = -150;
+
+        if (facing != 'left')
+        {
+            player.animations.play('left');
+            facing = 'left';
+        }
+    }
+    else if (cursors.right.isDown)
+    {
+        player.body.velocity.x = 150;
+
+        if (facing != 'right')
+        {
+            player.animations.play('right');
+            facing = 'right';
+        }
+    }
+    else
+    {
+        if (facing != 'idle')
+        {
+            player.animations.stop();
+
+            if (facing == 'left')
+            {
+                player.frame = 0;
+            }
+            else
+            {
+                player.frame = 5;
+            }
+
+            facing = 'idle';
+        }
+    }
+    
+    if (jumpButton.isDown && player.body.onFloor() && game.time.now > jumpTimer)
+    {
+        player.body.velocity.y = -250;
+        jumpTimer = game.time.now + 750;
+    }
+
 }
+
 		
+
