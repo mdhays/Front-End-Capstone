@@ -20,7 +20,7 @@ function preload() {
 	game.load.image('pokeBall', './images/pokeball.png');
 	game.load.image('platform', './images/platform.png');
 
-	game.load.spritesheet('RainbowDash', './sprites/dash.png', 43, 60, 39);
+	game.load.spritesheet('RainbowDash', './sprites/dash.png', 43, 60, 60);
 
 }
 
@@ -70,7 +70,7 @@ function create() {
     cursors = game.input.keyboard.createCursorKeys();
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
-    player.animations.add('left', [, 23, 22, 21], 10, true);
+    player.animations.add('left', [4, 3, 2, 1], 10, true);
     player.animations.add('turn', [4], 20, true);
     player.animations.add('right', [1, 2, 3, 4], 10, true);
 }
