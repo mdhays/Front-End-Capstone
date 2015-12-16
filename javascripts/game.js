@@ -1,4 +1,4 @@
-var game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, '', { preload: preload, create: create, update: update, Player: Player });
 
 
 // Global variables
@@ -59,14 +59,14 @@ function create() {
     // The player and its settings
     player = game.add.sprite(32, game.world.height - 200, 'RainbowDash');
 
-        player.scale.setTo(2);
+    // Resizing the sprite to be 2x as big.
+    player.scale.setTo(2);
 
     //  We need to enable physics on the player
     game.physics.enable(player, Phaser.Physics.ARCADE);
 
     // Giving the sprite physics attributes.
-    player.body.bounce.y = 0.2;
-    player.body.gravity.y = 300;
+    player.body.gravity.y = 400;
     player.body.collideWorldBounds = true;
 
     cursors = game.input.keyboard.createCursorKeys();
@@ -86,7 +86,7 @@ function update() {
 
     if (cursors.left.isDown)
     {
-        player.body.velocity.x = -150;
+        player.body.velocity.x = -350;
 
         if (facing != 'left')
         {
@@ -96,7 +96,7 @@ function update() {
     }
     else if (cursors.right.isDown)
     {
-        player.body.velocity.x = 150;
+        player.body.velocity.x = 350;
 
         if (facing != 'right')
         {
@@ -123,13 +123,25 @@ function update() {
         }
     }
     
-    if (jumpButton.isDown && player.body.onFloor() && game.time.now > jumpTimer)
+    //  Allow the player to jump if they are touching the ground.
+    if (cursors.up.isDown && player.body.touching.down)
     {
-        player.body.velocity.y = -250;
-        jumpTimer = game.time.now + 750;
+        player.body.velocity.y = -300;
     }
 
 }
+
+function Player() {
+
+	this.alive = true;
+	this.damageTaken = 0; 
+	this.power = game.rnd.integerInRange(4, 8);
+
+}
+
+
+
+
 
 		
 
