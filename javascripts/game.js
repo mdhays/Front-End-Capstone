@@ -1,4 +1,4 @@
-var game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, '', { preload: preload, create: create, update: update, Player: Player });
+var game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
 
 
 // Global variables
@@ -12,6 +12,8 @@ var facing;
 var rainbowDash;
 var fluttershy;
 var hoenn;
+var ground;
+var ledge;
 
 
 function preload() {
@@ -34,7 +36,7 @@ function create() {
 	game.add.sprite(0, 0, 'sky');
 	console.log("background loads");
 
- 	//  The platforms group contains the ground and the 2 ledges we can jump on
+ 	//  The platforms group contains the 2 ledges we can jump on
     platforms = game.add.group();
 
     //  We will enable physics for any object that is created in this group
@@ -57,7 +59,7 @@ function create() {
     ledge.body.immovable = true;
 
     // The player and its settings
-    player = game.add.sprite(32, game.world.height - 200, 'RainbowDash');
+    player = game.add.sprite(32, game.world.height - 700, 'RainbowDash');
 
     // Resizing the sprite to be 2x as big.
     player.scale.setTo(2);
@@ -71,18 +73,32 @@ function create() {
 
     cursors = game.input.keyboard.createCursorKeys();
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-
+    // Animation for moving left.
     player.animations.add('left', [4, 3, 2, 1], 10, true);
-    player.animations.add('turn', [4], 20, true);
+    // Animation for moving right.
     player.animations.add('right', [1, 2, 3, 4], 10, true);
 }
 
     
 function update() {
+	// Checks for collision of the player and platforms.
+	game.physics.arcade.collide(player, platforms, collisionHandler, null, this);
 
-	game.physics.arcade.collide(player, platforms);
+	// Adding in properties of "player".
+	
+	// Horizontal speed (starts at 0 so we're idle unless we move).
+	player.body.velocity.x = 0;
+	
+	// Showing the player is alive.
+	player.alive = true;
+	
+	// Keeps track of damage taken.
+	player.damageTaken = 0; 
+	
+	// Does damage between 4 and 8.
+	player.power = game.rnd.integerInRange(4, 8);
 
-	 player.body.velocity.x = 0;
+
 
     if (cursors.left.isDown)
     {
@@ -131,13 +147,22 @@ function update() {
 
 }
 
-function Player() {
 
-	this.alive = true;
-	this.damageTaken = 0; 
-	this.power = game.rnd.integerInRange(4, 8);
+// Handles removing the player sprite on contact.
+function collisionHandler() {
+	player.kill();
+	console.log("touching");
+}
+
+
+
+function render() {
+
+   	game.debug.body(player);
 
 }
+
+
 
 
 
