@@ -13,6 +13,7 @@ var rainbowDash;
 var fluttershy;
 var hoenn;
 var ground;
+var floor;
 var ledge;
 
 
@@ -39,11 +40,16 @@ function create() {
  	//  The platforms group contains the 2 ledges we can jump on
     platforms = game.add.group();
 
-    //  We will enable physics for any object that is created in this group
+    // floor is a seperate group for the ground. This is so we can work more easily on making
+    // collision with the ground result in removing the sprite.
+    floor = game.add.group();
+
+    //  We will enable physics for any object that is created in these groups.
     platforms.enableBody = true;
+    floor.enableBody = true;
 
     // Here we create the ground.
-    var ground = platforms.create(0, game.world.height - 64, 'platform');
+    ground = floor.create(0, game.world.height - 64, 'platform');
 
     //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
     ground.scale.setTo(2, 2);
@@ -82,7 +88,8 @@ function create() {
     
 function update() {
 	// Checks for collision of the player and platforms.
-	game.physics.arcade.collide(player, platforms, collisionHandler, null, this);
+	game.physics.arcade.collide(player, platforms);
+	game.physics.arcade.collide(player, floor, collisionHandler, null, this);
 
 	// Adding in properties of "player".
 	
