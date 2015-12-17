@@ -19,6 +19,10 @@ var ledge;
 var attacks;
 var attackTimer = 0;
 var space;
+var upButton;
+var downButton;
+var leftButton;
+var rightButton;
 
 function preload() {
 	// Preloading the images.
@@ -99,8 +103,14 @@ function create() {
     player.body.collideWorldBounds = true;
     player2.body.collideWorldBounds = true;
 
-    // Enable movement.
+    // Enable movement for player1.
     cursors = game.input.keyboard.createCursorKeys();
+
+    upButton = game.input.keyboard.addKey(Phaser.Keyboard.W);
+    downButton = game.input.keyboard.addKey(Phaser.Keyboard.S);
+    leftButton = game.input.keyboard.addKey(Phaser.Keyboard.A);
+    rightButton = game.input.keyboard.addKey(Phaser.Keyboard.D);
+
     attackButton = game.input.keyboard.addKeyCapture([ Phaser.Keyboard.SPACEBAR ]);
     // Animation for moving left.
     player.animations.add('left', [4, 3, 2, 1], 10, true);
@@ -120,7 +130,7 @@ function update() {
 	// Checks for collision of the player and platforms.
 	game.physics.arcade.collide(player, platforms);
 	// Checks for collision of the player and the floor/ground.
-	game.physics.arcade.collide(player, floor, fallOffStage, null, this);
+	game.physics.arcade.collide(player, floor, fallOffStageP1, null, this);
 	// Checks for collision of a player and an attack.
 	game.physics.arcade.collide(player, attacks, attackCollision, null, this);
 	// Checks for collision between attacks and platforms.
@@ -131,7 +141,7 @@ function update() {
 	// Checks for collision of the player and platforms.
 	game.physics.arcade.collide(player2, platforms);
 	// Checks for collision of the player and the floor/ground.
-	game.physics.arcade.collide(player2, floor, fallOffStage, null, this);
+	game.physics.arcade.collide(player2, floor, fallOffStageP2, null, this);
 	// Checks for collision of a player and an attack.
 	game.physics.arcade.collide(player2, attacks, attackCollision, null, this);
 
@@ -154,8 +164,8 @@ function update() {
 	player.power = game.rnd.integerInRange(4, 8);
 
 
-	// Defining movement speed.
-    if (cursors.left.isDown)
+
+     if (cursors.left.isDown)
     {
         player.body.velocity.x = -350;
 
@@ -164,8 +174,8 @@ function update() {
             player.animations.play('left');
             facing = 'left';
             
- 		 	
- 			player.scale.x = -2; //flipped
+            
+            player.scale.x = -2; //flipped
         }
     }
     else if (cursors.right.isDown)
@@ -201,16 +211,76 @@ function update() {
         attack();
     }
 
+
+
+    //Player2
+	// Defining movement speed.
+    if (leftButton.isDown)
+    {
+        player2.body.velocity.x = -350;
+
+        if (facing != 'left')
+        {
+            player2.animations.play('l');
+            facing = 'left';
+            console.log("player 2 facing left");
+            
+ 		 	
+ 			player2.scale.x = -2; //flipped
+        }
+    }
+    else if (rightButton.isDown)
+    {
+        player2.body.velocity.x = 350;
+
+        if (facing != 'right')
+        {
+            player2.animations.play('r');
+            facing = 'right';
+            console.log("player 2 facing right");
+
+
+            player2.scale.x = 2; //facing default direction
+        }
+    }
+    else
+    {
+        if (facing != 'idle')
+        {
+
+            player2.frame = [0, 1, 2, 3, 4];
+            
+        }
+    }
+    
+    //  Allow the player to jump if they are touching the ground.
+    if (upButton.isDown && player2.body.touching.down)
+    {
+        player2.body.velocity.y = -300;
+    }
+
+    if (downButton.isDown)
+    {
+        attack();
+    }
+ 
+
 }
 
 
-// Handles removing the player sprite on contact.
-function fallOffStage() {
+// Handles removing the player1 sprite on contact.
+function fallOffStageP1() {
 	
 	player.kill();
 	console.log("dead");
 }
 
+// Handles removing the player2 sprite on contact.
+function fallOffStageP2() {
+    
+    player2.kill();
+    console.log("dead");
+}
 
 // This function is for debugging and should be commented out for the final version.
 function render() {
