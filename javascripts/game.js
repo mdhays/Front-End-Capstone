@@ -49,11 +49,15 @@ function create() {
     // This group will be invisible bullets for attacking.
     attacks = game.add.group();
 
+    // Here we enable physics on the attacks group.
     game.physics.enable(attacks, Phaser.Physics.ARCADE);
 
     //  We will enable physics for any object that is created in these groups.
     platforms.enableBody = true;
+    
     floor.enableBody = true;
+
+    attacks.enableBody = true;
 
     // Here we create the ground.
     ground = floor.create(0, game.world.height - 64, 'platform');
@@ -97,9 +101,12 @@ function create() {
 function update() {
 	// Checks for collision of the player and platforms.
 	game.physics.arcade.collide(player, platforms);
+	// Checks for collision of the player and the floor/ground.
 	game.physics.arcade.collide(player, floor, fallOffStage, null, this);
-	// Trying to get attacks to work.
-	game.physics.arcade.collide(player, attacks, attack, null, this);
+	// Checks for collision of a player and an attack.
+	game.physics.arcade.collide(player, attacks, attackCollision, null, this);
+	// Checks for collision between attacks and platforms.
+	game.physics.arcade.collide(attacks, platforms, attackCollision, null, this);
 
 
 	// Adding in properties of "player".
@@ -120,7 +127,7 @@ function update() {
 	player.power = game.rnd.integerInRange(4, 8);
 
 
-
+	// Defining movement speed.
     if (cursors.left.isDown)
     {
         player.body.velocity.x = -350;
@@ -192,9 +199,9 @@ function render() {
 
 function attack() {
 
-	// Incrementing attacks by 275 milliseconds.
+	// Incrementing attacks by 375 milliseconds to decrease spamming.
 	if (attackTimer < game.time.now) {
-		attackTimer = game.time.now + 275;
+		attackTimer = game.time.now + 375;
 		var melee;
 
 		// Defining directional attacks and the position of the attacks.
@@ -225,6 +232,12 @@ function attack() {
 		console.log("attack");
 	}
  
+}
+
+function attackCollision(melee) {
+
+	melee.kill();
+
 }
 
 
