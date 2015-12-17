@@ -26,6 +26,7 @@ function preload() {
 	game.load.image('platform', './images/platform.png');
 	// Preloading the spritesheets.
 	game.load.spritesheet('RainbowDash', './sprites/dash.png', 43, 50, 60);
+	game.load.spritesheet('Fluttershy', './sprites/fluttershy.png', 43, 50, 12);
 
 }
 
@@ -77,6 +78,9 @@ function create() {
 
     // The player and its settings
     player = game.add.sprite(32, game.world.height - 700, 'RainbowDash');
+
+    // These lines of code handle flipping the sprite so it faces to the left.
+    player.anchor.setTo(.5, 1); //so it flips around its middle
 
     // Resizing the sprite to be 2x as big.
     player.scale.setTo(2);
@@ -136,7 +140,7 @@ function update() {
         {
             player.animations.play('left');
             facing = 'left';
-            player.anchor.setTo(.5, 1); //so it flips around its middle
+            
  		 	
  			player.scale.x = -2; //flipped
         }
@@ -149,6 +153,7 @@ function update() {
         {
             player.animations.play('right');
             facing = 'right';
+            // 
             player.scale.x = 2; //facing default direction
         }
     }
@@ -156,18 +161,9 @@ function update() {
     {
         if (facing != 'idle')
         {
-            // player.animations.stop();
 
-            if (facing == 'left')
-            {
-                player.frame = 0;
-            }
-            else
-            {
-                player.frame = [0, 1, 2, 3, 4];
-            }
-
-            facing = 'idle';
+            player.frame = [0, 1, 2, 3, 4];
+            
         }
     }
     
