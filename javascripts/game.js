@@ -15,7 +15,9 @@ var hoenn;
 var ground;
 var floor;
 var ledge;
-
+var attacks;
+var attackTimer = 0;
+var space;
 
 function preload() {
 	// Preloading the images.
@@ -23,7 +25,7 @@ function preload() {
 	game.load.image('pokeBall', './images/pokeball.png');
 	game.load.image('platform', './images/platform.png');
 
-	game.load.spritesheet('RainbowDash', './sprites/dash.png', 43, 60, 60);
+	game.load.spritesheet('RainbowDash', './sprites/dash.png', 43, 50, 60);
 
 }
 
@@ -43,6 +45,11 @@ function create() {
     // floor is a seperate group for the ground. This is so we can work more easily on making
     // collision with the ground result in removing the sprite.
     floor = game.add.group();
+
+    // This group will be invisible bullets for attacking.
+    attacks = game.add.group();
+
+    game.physics.enable(attacks, Phaser.Physics.ARCADE);
 
     //  We will enable physics for any object that is created in these groups.
     platforms.enableBody = true;
@@ -77,8 +84,9 @@ function create() {
     player.body.gravity.y = 400;
     player.body.collideWorldBounds = true;
 
+    // Enable movement.
     cursors = game.input.keyboard.createCursorKeys();
-    jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    attackButton = game.input.keyboard.addKeyCapture([ Phaser.Keyboard.SPACEBAR ]);
     // Animation for moving left.
     player.animations.add('left', [4, 3, 2, 1], 10, true);
     // Animation for moving right.
@@ -89,7 +97,10 @@ function create() {
 function update() {
 	// Checks for collision of the player and platforms.
 	game.physics.arcade.collide(player, platforms);
-	game.physics.arcade.collide(player, floor, collisionHandler, null, this);
+	game.physics.arcade.collide(player, floor, fallOffStage, null, this);
+	// Trying to get attacks to work.
+	game.physics.arcade.collide(player, attacks, attack, null, this);
+
 
 	// Adding in properties of "player".
 	
@@ -100,7 +111,10 @@ function update() {
 	player.alive = true;
 	
 	// Keeps track of damage taken.
-	player.damageTaken = 0; 
+	player.damageTaken = 0;
+
+	// Attack power is calculated between 4 and 8.
+	player.power = Math.random(4, 8); 
 	
 	// Does damage between 4 and 8.
 	player.power = game.rnd.integerInRange(4, 8);
@@ -152,13 +166,19 @@ function update() {
         player.body.velocity.y = -300;
     }
 
+    if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR))
+    {
+        attack();
+    }
+
 }
 
 
 // Handles removing the player sprite on contact.
-function collisionHandler() {
+function fallOffStage() {
+	
 	player.kill();
-	console.log("touching");
+	console.log("dead");
 }
 
 
@@ -169,7 +189,32 @@ function render() {
 
 }
 
+function attack() {
 
+	if (attackTimer < game.time.now) {
+		attackTimer = game.time.now + 275;
+		var melee;
+		if (facing === 'right') {
+			melee = attacks.create(player.body.x + player.body.width / 2 + 20, player.body.y +
+			player.body.height / 2 - 4, 'melee');
+		}
+		else {
+			melee = attacks.create(player.body.x + player.body.width / 2 - 20, player.body.y +
+			player.body.height / 2 - 4, 'melee');
+		}
+
+		game.physics.enable(melee, Phaser.Physics.ARCADE);
+
+		if (facing == 'right') {
+			melee.body.velocity.x = 400;
+		}
+
+		else {
+			melee.body.velocity.x = -400;
+		}
+	}
+ 
+}
 
 
 
