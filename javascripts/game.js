@@ -150,6 +150,7 @@ function update() {
 	
 	// Horizontal speed (starts at 0 so we're idle unless we move).
 	player.body.velocity.x = 0;
+    player2.body.velocity.x = 0;
 	
 	// Showing the player is alive.
 	player.alive = true;
@@ -225,8 +226,8 @@ function update() {
             facing = 'left';
             console.log("player 2 facing left");
             
- 		 	
- 			player2.scale.x = -2; //flipped
+ 		 	player2.scale.x = 2; //facing default direction
+ 			
         }
     }
     else if (rightButton.isDown)
@@ -240,7 +241,7 @@ function update() {
             console.log("player 2 facing right");
 
 
-            player2.scale.x = 2; //facing default direction
+            player2.scale.x = -2; //flipped
         }
     }
     else
