@@ -24,7 +24,7 @@ function preload() {
 	game.load.image('sky', './images/Hoenn.png');
 	game.load.image('pokeBall', './images/pokeball.png');
 	game.load.image('platform', './images/platform.png');
-
+	// Preloading the spritesheets.
 	game.load.spritesheet('RainbowDash', './sprites/dash.png', 43, 50, 60);
 
 }
@@ -136,6 +136,9 @@ function update() {
         {
             player.animations.play('left');
             facing = 'left';
+            player.anchor.setTo(.5, 1); //so it flips around its middle
+ 		 	
+ 			player.scale.x = -2; //flipped
         }
     }
     else if (cursors.right.isDown)
@@ -146,6 +149,7 @@ function update() {
         {
             player.animations.play('right');
             facing = 'right';
+            player.scale.x = 2; //facing default direction
         }
     }
     else
@@ -234,6 +238,8 @@ function attack() {
  
 }
 
+// This function handles removing attacks from the game upon impact.
+// Melee is passed in so we can destroy it.
 function attackCollision(melee) {
 
 	melee.kill();
