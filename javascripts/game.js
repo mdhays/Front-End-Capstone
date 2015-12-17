@@ -182,18 +182,22 @@ function fallOffStage() {
 }
 
 
-
+// This function is for debugging and should be commented out for the final version.
 function render() {
 
    	game.debug.body(player);
+   	game.debug.body(attacks);
 
 }
 
 function attack() {
 
+	// Incrementing attacks by 275 milliseconds.
 	if (attackTimer < game.time.now) {
 		attackTimer = game.time.now + 275;
 		var melee;
+
+		// Defining directional attacks and the position of the attacks.
 		if (facing === 'right') {
 			melee = attacks.create(player.body.x + player.body.width / 2 + 20, player.body.y +
 			player.body.height / 2 - 4, 'melee');
@@ -203,8 +207,14 @@ function attack() {
 			player.body.height / 2 - 4, 'melee');
 		}
 
+		// Give our attacks some physics.
 		game.physics.enable(melee, Phaser.Physics.ARCADE);
 
+		// Gets rid of attacks that go offscreen (only for testing purposes, remove before
+		//	the final version).
+		melee.outOfBoundsKill = true;
+
+		// Defining the speed of the attacks.
 		if (facing == 'right') {
 			melee.body.velocity.x = 400;
 		}
@@ -212,6 +222,7 @@ function attack() {
 		else {
 			melee.body.velocity.x = -400;
 		}
+		console.log("attack");
 	}
  
 }
