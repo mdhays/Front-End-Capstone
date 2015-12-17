@@ -6,6 +6,7 @@ var startButton;
 var text;
 var platforms;
 var player;
+var player2;
 var cursors;
 var jumpButton;
 var facing;
@@ -26,7 +27,7 @@ function preload() {
 	game.load.image('platform', './images/platform.png');
 	// Preloading the spritesheets.
 	game.load.spritesheet('RainbowDash', './sprites/dash.png', 43, 50, 60);
-	game.load.spritesheet('Fluttershy', './sprites/fluttershy.png', 43, 50, 12);
+	game.load.spritesheet('Twilight', './sprites/twilight.png', 60, 65, 30);
 
 }
 
@@ -79,18 +80,24 @@ function create() {
     // The player and its settings
     player = game.add.sprite(32, game.world.height - 700, 'RainbowDash');
 
+    player2 = game.add.sprite(120, game.world.height - 700, 'Twilight');
+
     // These lines of code handle flipping the sprite so it faces to the left.
     player.anchor.setTo(.5, 1); //so it flips around its middle
 
     // Resizing the sprite to be 2x as big.
     player.scale.setTo(2);
 
-    //  We need to enable physics on the player
-    game.physics.enable(player, Phaser.Physics.ARCADE);
+    player2.scale.setTo(1.5);
 
-    // Giving the sprite physics attributes.
+    //  We need to enable physics on the players
+    game.physics.enable(player, Phaser.Physics.ARCADE);
+    game.physics.enable(player2, Phaser.Physics.ARCADE);
+    // Giving the sprites physics attributes.
     player.body.gravity.y = 400;
+    player2.body.gravity.y = 400;
     player.body.collideWorldBounds = true;
+    player2.body.collideWorldBounds = true;
 
     // Enable movement.
     cursors = game.input.keyboard.createCursorKeys();
@@ -99,10 +106,17 @@ function create() {
     player.animations.add('left', [4, 3, 2, 1], 10, true);
     // Animation for moving right.
     player.animations.add('right', [1, 2, 3, 4], 10, true);
+
+    player2.animations.add('l', [1, 2, 3, 4], 10, true);
+    player2.animations.add('r', [4, 3, 2, 1], 10, true);
+
 }
 
-    
+// This function handles game task that are being updated every frame.
 function update() {
+
+    //Player1 collision handlers.
+
 	// Checks for collision of the player and platforms.
 	game.physics.arcade.collide(player, platforms);
 	// Checks for collision of the player and the floor/ground.
@@ -111,6 +125,15 @@ function update() {
 	game.physics.arcade.collide(player, attacks, attackCollision, null, this);
 	// Checks for collision between attacks and platforms.
 	game.physics.arcade.collide(attacks, platforms, attackCollision, null, this);
+
+	// Player2 collision handlers.
+
+	// Checks for collision of the player and platforms.
+	game.physics.arcade.collide(player2, platforms);
+	// Checks for collision of the player and the floor/ground.
+	game.physics.arcade.collide(player2, floor, fallOffStage, null, this);
+	// Checks for collision of a player and an attack.
+	game.physics.arcade.collide(player2, attacks, attackCollision, null, this);
 
 
 	// Adding in properties of "player".
@@ -125,7 +148,7 @@ function update() {
 	player.damageTaken = 0;
 
 	// Attack power is calculated between 4 and 8.
-	player.power = Math.random(4, 8); 
+	player.power = Math.random(6, 8); 
 	
 	// Does damage between 4 and 8.
 	player.power = game.rnd.integerInRange(4, 8);
@@ -193,6 +216,7 @@ function fallOffStage() {
 function render() {
 
    	game.debug.body(player);
+   	game.debug.body(player2);
    	game.debug.body(attacks);
 
 }
