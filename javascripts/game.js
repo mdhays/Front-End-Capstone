@@ -17,6 +17,7 @@ var ground;
 var floor;
 var ledge;
 var attacks;
+var timer;
 var attackTimer = 0;
 var space;
 var upButton;
@@ -86,13 +87,16 @@ function create() {
 
     player2 = game.add.sprite(120, game.world.height - 700, 'Twilight');
 
+    // new LifeSpan();
+
     // These lines of code handle flipping the sprite so it faces to the left.
     player.anchor.setTo(.5, 1); //so it flips around its middle
 
-    // Resizing the sprite to be 2x as big.
+    // Resizing the Rainbow Dash sprite to be 2x as big.
     player.scale.setTo(2);
 
-    player2.scale.setTo(1.5);
+    // Resizing the Twilight Sparkle sprite to be 1.4x as big.
+    player2.scale.setTo(1.4);
 
     //  We need to enable physics on the players
     game.physics.enable(player, Phaser.Physics.ARCADE);
@@ -152,18 +156,17 @@ function update() {
 	player.body.velocity.x = 0;
     player2.body.velocity.x = 0;
 	
-	// Showing the player is alive.
-	player.alive = true;
-	
-	// Keeps track of damage taken.
-	player.damageTaken = 0;
 
-	// Attack power is calculated between 4 and 8.
-	player.power = Math.random(6, 8); 
-	
-	// Does damage between 4 and 8.
-	player.power = game.rnd.integerInRange(4, 8);
 
+
+
+
+
+	
+	
+	
+	
+	
 
 
      if (cursors.left.isDown)
@@ -209,7 +212,7 @@ function update() {
 
     if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR))
     {
-        attack();
+        attackP1();
     }
 
 
@@ -262,7 +265,7 @@ function update() {
 
     if (downButton.isDown)
     {
-        attack();
+        attackP2();
     }
  
 
@@ -292,12 +295,13 @@ function render() {
 
 }
 
-function attack() {
+function attackP1() {
 
-	// Incrementing attacks by 375 milliseconds to decrease spamming.
+	// Incrementing attacks by 375 milliseconds.
 	if (attackTimer < game.time.now) {
 		attackTimer = game.time.now + 375;
-		var melee;
+		// melee is an instance of the attacks group we previously made.
+        var melee;
 
 		// Defining directional attacks and the position of the attacks.
 		if (facing === 'right') {
@@ -310,7 +314,8 @@ function attack() {
 		}
 
 		// Give our attacks some physics.
-		game.physics.enable(melee, Phaser.Physics.ARCADE);
+        // Not sure I need this...
+		// game.physics.enable(melee, Phaser.Physics.ARCADE);
 
 		// Gets rid of attacks that go offscreen (only for testing purposes, remove before
 		//	the final version).
@@ -325,13 +330,58 @@ function attack() {
 			melee.body.velocity.x = -400;
 		}
 		console.log("attack");
+
+        
 	}
+ 
+}
+
+
+function attackP2() {
+
+    // Incrementing attacks by 375 milliseconds.
+    if (attackTimer < game.time.now) {
+        attackTimer = game.time.now + 375;
+        // melee is an instance of the attacks group we previously made.
+        var melee;
+
+        // Defining directional attacks and the position of the attacks.
+        if (facing === 'right') {
+            melee = attacks.create(player2.body.x + player2.body.width / 2 + 20, player2.body.y +
+            player2.body.height / 2 - 4, 'melee');
+        }
+        else {
+            melee = attacks.create(player2.body.x + player2.body.width / 2 - 20, player2.body.y +
+            player2.body.height / 2 - 4, 'melee');
+        }
+
+        // Give our attacks some physics.
+        // Not sure I need this...
+        // game.physics.enable(melee, Phaser.Physics.ARCADE);
+
+        // Gets rid of attacks that go offscreen (only for testing purposes, remove before
+        //  the final version).
+        melee.outOfBoundsKill = true;
+
+        // Defining the speed of the attacks.
+        if (facing == 'right') {
+            melee.body.velocity.x = 400;
+        }
+
+        else {
+            melee.body.velocity.x = -400;
+        }
+        console.log("attack");
+
+        
+    }
  
 }
 
 // This function handles removing attacks from the game upon impact.
 // Melee is passed in so we can destroy it.
 function attackCollision(melee) {
+
 
 	melee.kill();
 
