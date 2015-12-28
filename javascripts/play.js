@@ -5,7 +5,7 @@ function preload() {
     
     game.load.image('graveyard', './sprites/cemetary.png');
     game.load.image('gravestone', './sprites/gravestone.png');
-    game.load.spritesheet('skeleton', './sprites/skeleton.png');
+    game.load.spritesheet('skeleton', './sprites/skeleton.png', 80, 100, 50);
 
 }
 
