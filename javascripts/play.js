@@ -9,7 +9,7 @@ function preload() {
     
     game.load.image('graveyard', './sprites/cemetary.png');
     game.load.image('gravestone', './sprites/gravestone.png');
-    game.load.spritesheet('skeleton', './sprites/skeleton.png', 74, 95, 50);
+    game.load.spritesheet('skeleton', './sprites/skeleton.png', 75, 95, 21);
 
 }
 
@@ -31,7 +31,7 @@ function create() {
 
     skeleton = game.add.sprite(30, game.world.height - 150, 'skeleton');
 
-    skeleton.animations.add('right', [3, 4, 5, 6, 7], true);
+    skeleton.animations.add('right', [1 ,2, 4, 5], 7, true);
 
     //  We need to enable physics on the player
     game.physics.enable(skeleton, Phaser.Physics.ARCADE);
@@ -52,6 +52,6 @@ function update() {
 
 function render() {
 
-    game.debug.body(skeleton);
+    // game.debug.body(skeleton);
 
 }
