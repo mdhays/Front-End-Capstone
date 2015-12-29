@@ -14,12 +14,14 @@ function preload() {
 
 function create() {
 
-    game.add.sprite(0, game.world.height - 200, 'graveyard');
+    game.stage.backgroundColor = 0xffffff;
+
+    game.add.sprite(0, game.world.height - 400, 'graveyard');
     console.log("background loads");
 
-    // gravestone = game.add.sprite(0, 0, 'gravestone');
+    gravestone = game.add.sprite(150, game.world.height - 105, 'gravestone');
 
-    // gravestone.scale.setTo(.1);
+    gravestone.scale.setTo(.1);
 
     game.add.sprite(0, game.world.height - 150, 'skeleton');
 }
