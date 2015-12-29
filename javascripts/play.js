@@ -2,6 +2,7 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create
 
 var player;
 var gravestone;
+var graveYard;
 
 function preload() {
     
@@ -14,9 +15,10 @@ function preload() {
 
 function create() {
 
+    // Here we set the color of the background. I made it white since the image is black.
     game.stage.backgroundColor = 0xffffff;
 
-    game.add.sprite(0, game.world.height - 400, 'graveyard');
+    graveYard = game.add.tileSprite(0, game.world.height - 400, 1024, 366, 'graveyard');
     console.log("background loads");
 
     gravestone = game.add.sprite(150, game.world.height - 105, 'gravestone');
@@ -24,11 +26,14 @@ function create() {
     gravestone.scale.setTo(.1);
 
     game.add.sprite(0, game.world.height - 150, 'skeleton');
+
+
 }
 
 
 function update() {
 
+    graveYard.tilePosition.x -= 2;
 
 }
 
