@@ -6,6 +6,11 @@ var graveYard;
 var skeleton;
 var cursors;
 var ground;
+var spawnGraveStoneTimer;
+var scoreText;
+var score = 0;
+var nextGraveStoneSpawn = 0;
+var flyRate = 750;
 
 function preload() {
     
@@ -23,18 +28,20 @@ function create() {
     game.time.desiredFps = 60;
 
     // Here we set the color of the background. I made it white since the image is black.
-    game.stage.backgroundColor = 0xffffff;
+    game.stage.backgroundColor = 0xffffff;  
 
     graveYard = game.add.tileSprite(0, game.world.height - 400, 1024, 366, 'graveyard');
     console.log("background loads");
 
-    gravestone = game.add.sprite(150, game.world.height - 105, 'gravestone');
+    gravestone = game.add.sprite(150, game.world.height - 155, 'gravestone');
 
     gravestone.scale.setTo(.1);
 
-    skeleton = game.add.sprite(30, game.world.height - 260, 'skeleton');
+    gravestone = game.add.group();
 
-    ground = game.add.sprite(30, game.world.height - 120, 'ground');
+    skeleton = game.add.sprite(30, game.world.height - 190, 'skeleton');
+
+    ground = game.add.sprite(30, game.world.height - 100, 'ground');
 
     ground.scale.setTo(.1);
 
@@ -51,6 +58,10 @@ function create() {
     cursors = game.input.keyboard.createCursorKeys();
 
     skeleton.body.gravity.y = 400;
+
+    game.spawnGraveStoneTimer = 0;
+
+    game.fontStyle = { font: "40px Arial", fill: "#FFCC00", stroke: "#333", strokeThickness: 5, align: "center" };
 
 
 
@@ -69,7 +80,8 @@ function update() {
 
      //  Allow the player to jump if they are touching the ground.
     if (cursors.up.isDown && skeleton.body.touching.down)
-    {
+    {   
+        // Setting the jump height.
         skeleton.body.velocity.y = -300;
     }
 
@@ -77,10 +89,10 @@ function update() {
 }
 
 
-
+// This function handles any debuggers I use, mostly to test collision.
 function render() {
 
-    // game.debug.body(skeleton);
-    // game.debug.body(ground);
+    game.debug.body(skeleton);
+    game.debug.body(ground);
 
 }
