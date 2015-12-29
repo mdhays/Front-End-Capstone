@@ -1,5 +1,7 @@
-var game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
 
+var player;
+var gravestone;
 
 function preload() {
     
@@ -12,16 +14,19 @@ function preload() {
 
 function create() {
 
-    game.add.sprite(0, 0, 'graveyard');
+    game.add.sprite(0, game.world.height - 200, 'graveyard');
     console.log("background loads");
 
-    // game.add.sprite(0, 0, 'gravestone');
+    // gravestone = game.add.sprite(0, 0, 'gravestone');
 
-    game.add.sprite(0, game.world.height - 700, 'skeleton');
+    // gravestone.scale.setTo(.1);
+
+    game.add.sprite(0, game.world.height - 150, 'skeleton');
 }
 
 
 function update() {
+
 
 }
 
