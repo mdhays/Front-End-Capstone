@@ -2,6 +2,7 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create
 
 var player;
 var gravestone;
+var gravestones;
 var graveYard;
 var skeleton;
 var cursors;
@@ -37,12 +38,20 @@ function create() {
     graveYard = game.add.tileSprite(0, game.world.height - 400, 1024, 366, 'graveyard');
     console.log("background loads");
 
-    gravestone = game.add.sprite(150, game.world.height - 155, 'gravestone');
+    gravestone = game.add.sprite('gravestone');
 
-    gravestone.scale.setTo(.1);
 
     // Make the gravestones into a group.
     gravestone = game.add.group();
+    // Enables physics on all sprites in the group.
+    gravestone.enableBody = true;
+
+    gravestone.createMultiple(1000, 'gravestone');
+
+    gravestone.setAll('checkWorldBounds', true);
+
+    gravestone.scale.setTo(.1);
+
     // The player's skeleton sprite.
     skeleton = game.add.sprite(30, game.world.height - 190, 'skeleton');
     // Defining where and what the ground constitutes. 
@@ -92,12 +101,12 @@ function update() {
     skeleton.animations.play('right');
 
      //  Allow the player to jump if they are touching the ground.
-    if (cursors.up.isDown && skeleton.body.touching.down)
-    {   
+    if (cursors.up.isDown && skeleton.body.touching.down) {   
         // Setting the jump height.
         skeleton.body.velocity.y = -450;
     }
 
+    gravesAttack();
 
 }
 
@@ -107,5 +116,24 @@ function render() {
 
     game.debug.body(skeleton);
     game.debug.body(ground);
+    this.game.debug.text(this.game.time.fps || '--', 20, 70, "#00ff00", "40px Courier");  
+
+
+}
+
+function gravesAttack() {
+
+    // x = 850
+
+    console.log("gravestones in");
+    
+    gravestones = gravestone.create(8000 ,game.world.height+4000, 'gravestone');
+    // Gravity for candy
+    gravestones.body.gravity.x = -300;
+    // Next 4 lines checking for boundaries
+    gravestones.body.collideWorldBounds = false;
+    gravestones.anchor.setTo = (0.5, 0.5);
+    gravestones.checkWorldBounds = true;
+    gravestones.outOfBoundsKill = true;
 
 }
