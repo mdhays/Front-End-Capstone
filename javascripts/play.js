@@ -11,7 +11,7 @@ var spawnGraveStoneTimer;
 var scoreText;
 var score = 0;
 var nextGraveStoneSpawn = 0;
-var flyRate = 750;
+var flyRate = 1200;
 var music;
 var jumpTimer = 0;
 var loadingJump = false;
@@ -29,6 +29,9 @@ function preload() {
 
 function create() {
 
+    // Physics
+    // game.physics.startSystem(Phaser.Physics.ARCADE);
+
         // Assigning Fps
     game.time.desiredFps = 60;
 
@@ -37,19 +40,16 @@ function create() {
     // Adds the background as a tilesprite so it can be scrolled.
     graveYard = game.add.tileSprite(0, game.world.height - 400, 1024, 366, 'graveyard');
     console.log("background loads");
-
+    //Adds the gravestone sprite to the game.
     gravestone = game.add.sprite('gravestone');
-
-
     // Make the gravestones into a group.
     gravestone = game.add.group();
-    // Enables physics on all sprites in the group.
-    gravestone.enableBody = true;
-
+    
+    // Creates 1000 gravestones.
     gravestone.createMultiple(1000, 'gravestone');
-
+    // Checks the gravestones position in relation to the world bounds. Allows us to kill the graves easily.
     gravestone.setAll('checkWorldBounds', true);
-
+    // Scales the gravestones down to .1% because they're massive.
     gravestone.scale.setTo(.1);
 
     // The player's skeleton sprite.
@@ -66,6 +66,12 @@ function create() {
 
     // enable physics on the black square serving as the ground.
     game.physics.enable(ground, Phaser.Physics.ARCADE);
+
+    // enable physics on the gravestones.
+    game.physics.enable(gravestone, Phaser.Physics.ARCADE);
+    // Enables physics on all sprites in the group.
+    gravestone.enableBody = true;
+
     // Sets the ground as immovable
     ground.body.immovable = true;
 
@@ -106,8 +112,17 @@ function update() {
         skeleton.body.velocity.y = -450;
     }
 
-    gravesAttack();
 
+    // Calls the gravesAttack function at the correct time, fallRate set at 1000 by default
+    game.spawnGraveStoneTimer += game.time.elapsed;
+    console.log("spooky!", game.spawnGraveStoneTimer);
+    // if spawn timer reach one second (1000 miliseconds)
+    if(game.spawnGraveStoneTimer > flyRate) {
+        // reset timer
+        game.spawnGraveStoneTimer = 0;
+        // spawn new graves
+        gravesAttack();
+    }
 }
 
 
@@ -116,20 +131,18 @@ function render() {
 
     game.debug.body(skeleton);
     game.debug.body(ground);
-    this.game.debug.text(this.game.time.fps || '--', 20, 70, "#00ff00", "40px Courier");  
+    game.debug.body(gravestone);
 
 
 }
 
 function gravesAttack() {
 
-    // x = 850
-
     console.log("gravestones in");
-    
+    // Sets the coordinates of the gravestones' spawn.
     gravestones = gravestone.create(8000 ,game.world.height+4000, 'gravestone');
-    // Gravity for candy
-    gravestones.body.gravity.x = -300;
+    // Gravity for tombstones
+    gravestones.body.gravity.x = -1000;
     // Next 4 lines checking for boundaries
     gravestones.body.collideWorldBounds = false;
     gravestones.anchor.setTo = (0.5, 0.5);
