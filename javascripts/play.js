@@ -12,6 +12,8 @@ var score = 0;
 var nextGraveStoneSpawn = 0;
 var flyRate = 750;
 var music;
+var jumpTimer = 0;
+var loadingJump = false;
 
 function preload() {
     
@@ -35,9 +37,9 @@ function create() {
     graveYard = game.add.tileSprite(0, game.world.height - 400, 1024, 366, 'graveyard');
     console.log("background loads");
 
-    // gravestone = game.add.sprite(150, game.world.height - 155, 'gravestone');
+    gravestone = game.add.sprite(150, game.world.height - 155, 'gravestone');
 
-    // gravestone.scale.setTo(.1);
+    gravestone.scale.setTo(.1);
 
     // Make the gravestones into a group.
     gravestone = game.add.group();
@@ -60,15 +62,21 @@ function create() {
 
     cursors = game.input.keyboard.createCursorKeys();
 
-    skeleton.body.gravity.y = 400;
+    skeleton.body.gravity.y = 800;
 
     game.spawnGraveStoneTimer = 0;
 
     game.fontStyle = { font: "40px Arial", fill: "#FFCC00", stroke: "#333", strokeThickness: 5, align: "center" };
 
-    music = game.add.audio('spooky');
+    // Audio
 
-    music.play();
+    // // Adds the music to the game.
+    // music = game.add.audio('spooky');
+    // // Sets the music to loop. ogg files are best for looping audio.
+    // music.loop = true;
+    // // Plays the music.
+    // music.play();
+
 
 }
 
@@ -78,16 +86,16 @@ function update() {
 
     // Checks for collision of the skeleton and floor.
     game.physics.arcade.collide(skeleton, ground);
-
+    // Sets the scroll rate of the graveyard background.
     graveYard.tilePosition.x -= 2;
-
+    // Plays the running animation.
     skeleton.animations.play('right');
 
      //  Allow the player to jump if they are touching the ground.
     if (cursors.up.isDown && skeleton.body.touching.down)
     {   
         // Setting the jump height.
-        skeleton.body.velocity.y = -300;
+        skeleton.body.velocity.y = -450;
     }
 
 
