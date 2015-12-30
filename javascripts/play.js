@@ -101,6 +101,9 @@ function update() {
 
     // Checks for collision of the skeleton and floor.
     game.physics.arcade.collide(skeleton, ground);
+
+    game.physics.arcade.collide(skeleton, gravestone);
+
     // Sets the scroll rate of the graveyard background.
     graveYard.tilePosition.x -= 2;
     // Plays the running animation.
