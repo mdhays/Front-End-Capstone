@@ -10,6 +10,7 @@ var ground;
 var spawnGraveStoneTimer;
 var scoreText;
 var score = 0;
+var timer;
 var nextGraveStoneSpawn = 0;
 var flyRate = 1200;
 var music;
@@ -81,8 +82,6 @@ function create() {
 
     game.spawnGraveStoneTimer = 0;
 
-    game.fontStyle = { font: "40px Arial", fill: "#FFCC00", stroke: "#333", strokeThickness: 5, align: "center" };
-
     // Audio
 
     // // Adds the music to the game.
@@ -92,12 +91,23 @@ function create() {
     // // Plays the music.
     // music.play();
 
+    // Creating the timer
+    timer = game.time.create(false);
+
+    //  Set a TimerEvent to occur after 2 seconds
+    timer.loop(500, updateScore, this);
+
+    timer.start();
+
 
 }
 
 
 function update() {
 
+
+    skeleton.checkWorldBounds = true;
+    skeleton.outOfBoundsKill = true;
 
     // Checks for collision of the skeleton and floor.
     game.physics.arcade.collide(skeleton, ground);
@@ -118,7 +128,7 @@ function update() {
 
     // Calls the gravesAttack function at the correct time, fallRate set at 1000 by default
     game.spawnGraveStoneTimer += game.time.elapsed;
-    console.log("spooky!", game.spawnGraveStoneTimer);
+    // console.log("spooky!", game.spawnGraveStoneTimer);
     // if spawn timer reach one second (1000 miliseconds)
     if(game.spawnGraveStoneTimer > flyRate) {
         // reset timer
@@ -126,15 +136,45 @@ function update() {
         // spawn new graves
         gravesAttack();
     }
+
+
+
+
+    if (score === 30) {
+
+        gravestones.body.gravity.x = -1550;
+
+    }
+    
+    if (score === 50) {
+
+        gravestones.body.gravity.x = -2050;
+
+
+    }
+
+    if (score === 55) {
+
+        gravestones.body.x = -2051;
+    }
+
+    if (score === 70) {
+
+        gravestones.body.x = -2000;
+
+
+    }
 }
 
 
 // This function handles any debuggers I use, mostly to test collision.
 function render() {
 
-    game.debug.body(skeleton);
-    game.debug.body(ground);
-    game.debug.body(gravestone);
+    // game.debug.body(skeleton);
+    // game.debug.body(ground);
+    // game.debug.body(gravestone);
+    game.debug.text('Score: ' + score, 32, 32);
+
 
 
 }
@@ -151,5 +191,14 @@ function gravesAttack() {
     gravestones.anchor.setTo = (0.5, 0.5);
     gravestones.checkWorldBounds = true;
     gravestones.outOfBoundsKill = true;
+
+}
+
+function updateScore() {
+
+    // Incrementing the score
+    score++;
+    console.log(score);
+
 
 }
