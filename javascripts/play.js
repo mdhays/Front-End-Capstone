@@ -16,6 +16,11 @@ var flyRate = 1200;
 var music;
 var jumpTimer = 0;
 var loadingJump = false;
+var gameOverText = "R.I.P";
+var restartText = "Restart by clicking here";
+var style = { font: "65px Rockwell", fill: "#00000", align: "center" };
+var displayScore;
+
 
 function preload() {
     
@@ -202,10 +207,11 @@ function updateScore() {
     score++;
     console.log(score);
 
+    displayScore = score;
 
 }
 
-function gameOver() {
+function gameOver(displayScore) {
 
     // Kills our skeleton sprite.
     skeleton.kill();
@@ -214,8 +220,27 @@ function gameOver() {
     // Stops the timer and therefore, our score.
     timer.stop();
 
+    // Adds text to screen when the function runs.
+    var t = game.add.text(game.world.centerX, game.world.centerY-200, gameOverText, style);
+
+    var yourScore = "Your score " + displayScore;
+
+    var a = game.add.text(game.world.centerX-350, game.world.centerY-100, yourScore, style);
+
+    // Text that when click on, resets the game.
+    var u = game.add.text(game.world.centerX-300, game.world.centerY-10, restartText, style);
+        u.events.onInputDown.add(restartGame, this);
+        u.inputEnabled = true;
+
+    score = 0;
+
 }
 
+function restartGame() {
 
+
+    game.state.restart();
+
+}
 
 
