@@ -30,8 +30,8 @@ function preload() {
 
 function create() {
 
-    // Physics
-    // game.physics.startSystem(Phaser.Physics.ARCADE);
+    //  We only want world bounds on the left and right
+    game.physics.setBoundsToWorld();
 
         // Assigning Fps
     game.time.desiredFps = 60;
@@ -99,6 +99,8 @@ function create() {
 
     timer.start();
 
+    
+
 
 }
 
@@ -112,7 +114,7 @@ function update() {
     // Checks for collision of the skeleton and floor.
     game.physics.arcade.collide(skeleton, ground);
 
-    game.physics.arcade.collide(skeleton, gravestone);
+    game.physics.arcade.collide(skeleton, gravestone, gameOver);
 
     // Sets the scroll rate of the graveyard background.
     graveYard.tilePosition.x -= 2;
@@ -196,9 +198,24 @@ function gravesAttack() {
 
 function updateScore() {
 
-    // Incrementing the score
+    // Incrementing the score.
     score++;
     console.log(score);
 
 
 }
+
+function gameOver() {
+
+    // Kills our skeleton sprite.
+    skeleton.kill();
+    console.log("working");
+
+    // Stops the timer and therefore, our score.
+    timer.stop();
+
+}
+
+
+
+
