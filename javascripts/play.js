@@ -15,11 +15,12 @@ var nextGraveStoneSpawn = 0;
 var flyRate = 1200;
 var music;
 var jumpTimer = 0;
-var loadingJump = false;
 var gameOverText = "R.I.P";
 var restartText = "Restart by clicking here";
 var style = { font: "65px Rockwell", fill: "#00000", align: "center" };
 var displayScore;
+var globalGravity = 1000;
+var playerJumped = false;
 
 
 function preload() {
@@ -81,30 +82,33 @@ function create() {
     // Sets the ground as immovable
     ground.body.immovable = true;
 
+    // Creates the keys.
     cursors = game.input.keyboard.createCursorKeys();
 
-    skeleton.body.gravity.y = 800;
+    // Sets the gravity on the skeleton.
+    // skeleton.body.gravity.y = 800;
 
+    // Keeps track of the time between tombstones.
     game.spawnGraveStoneTimer = 0;
 
     // Audio
 
-    // // Adds the music to the game.
+    // Adds the music to the game.
     // music = game.add.audio('spooky');
     // // Sets the music to loop. ogg files are best for looping audio.
     // music.loop = true;
     // // Plays the music.
     // music.play();
 
-    // Creating the timer
+    // Creating the timer.
     timer = game.time.create(false);
 
-    //  Set a TimerEvent to occur after 2 seconds
+    //  Set a TimerEvent to occur after 2 seconds.
     timer.loop(500, updateScore, this);
 
+    // Starts the timer.
     timer.start();
 
-    
 
 
 }
@@ -127,9 +131,24 @@ function update() {
     skeleton.animations.play('right');
 
      //  Allow the player to jump if they are touching the ground.
-    if (cursors.up.isDown && skeleton.body.touching.down) {   
-        // Setting the jump height.
-        skeleton.body.velocity.y = -450;
+    // if (cursors.up.isDown && skeleton.body.touching.down) {   
+    //     // Setting the jump height.
+    //     skeleton.body.velocity.y = -450;
+    // }
+
+    if (cursors.up.isDown && skeleton.body.touching.down) {
+        //  Allow the player to jump if they are touching the ground.
+        skeleton.body.velocity.y = -400;
+        playerJumped = true;
+        
+    } else if (cursors.up.isDown && playerJumped == true )  {  
+        // reduce players gravity if player recently jumped and jump key is down 
+        skeleton.body.gravity.y = globalGravity - 500;
+
+    } else {
+        // reset gravity once the jump key is released to prevent prolongation
+        playerJumped = false;
+        skeleton.body.gravity.y = globalGravity;
     }
 
 
@@ -146,8 +165,8 @@ function update() {
 
 
 
-
-    if (score === 30) {
+    // These if statements control the speed the tombstones move at.
+    if (score === 35) {
 
         gravestones.body.gravity.x = -1550;
 
@@ -182,8 +201,6 @@ function render() {
     // game.debug.body(gravestone);
     game.debug.text('Score: ' + score, 32, 32);
 
-
-
 }
 
 function gravesAttack() {
@@ -207,8 +224,6 @@ function updateScore() {
     score++;
     console.log(score);
 
-    displayScore = score;
-
 }
 
 function gameOver(displayScore) {
@@ -221,18 +236,18 @@ function gameOver(displayScore) {
     timer.stop();
 
     // Adds text to screen when the function runs.
-    var t = game.add.text(game.world.centerX, game.world.centerY-200, gameOverText, style);
-
-    var yourScore = "Your score " + displayScore;
-
-    var a = game.add.text(game.world.centerX-350, game.world.centerY-100, yourScore, style);
+    var t = game.add.text(game.world.centerX-50, game.world.centerY-200, gameOverText, style);
 
     // Text that when click on, resets the game.
     var u = game.add.text(game.world.centerX-300, game.world.centerY-10, restartText, style);
         u.events.onInputDown.add(restartGame, this);
         u.inputEnabled = true;
 
+    // Resets the score
     score = 0;
+
+    // Stops the music.
+    // music.stop();
 
 }
 
